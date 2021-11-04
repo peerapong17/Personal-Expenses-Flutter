@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 
 class AdaptiveFlatButton extends StatelessWidget {
   final String text;
-  final Function handler;
+  final Function() handler;
 
   AdaptiveFlatButton(this.text, this.handler);
 

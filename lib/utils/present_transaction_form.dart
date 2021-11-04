@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/widgets/transaction_form.dart';
 
-class TransactionService {
-  static void startAddNewTransaction(BuildContext ctx) {
+presentTransactionForm(BuildContext ctx, [String? id = null]) {
     showModalBottomSheet(
       context: ctx,
       builder: (_) {
         return GestureDetector(
           onTap: () {},
-          child: TransactionForm(null),
+          child: TransactionForm(id),
           behavior: HitTestBehavior.opaque,
         );
       },
     );
   }
-}

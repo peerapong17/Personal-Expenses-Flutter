@@ -1,21 +1,21 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_complete_guide/models/transaction.dart';
+import 'package:flutter_complete_guide/models/transaction.dart' as M;
 
-class TransactionState extends ChangeNotifier {
-  List<Transaction> _userTransactions = [
-    Transaction(
+class Transaction extends ChangeNotifier {
+  List<M.Transaction> _userTransactions = [
+    M.Transaction(
       id: 't1',
       title: 'New Shoes',
       amount: 69.99,
       date: DateTime.now(),
     ),
-    Transaction(
+    M.Transaction(
       id: 't2',
       title: 'Weekly Groceries',
       amount: 16.53,
       date: DateTime.now(),
     ),
-    Transaction(
+    M.Transaction(
       id: 't3',
       title: 'Buy a coffee',
       amount: 60.69,
@@ -23,7 +23,7 @@ class TransactionState extends ChangeNotifier {
         Duration(days: 1),
       ),
     ),
-    Transaction(
+    M.Transaction(
       id: 't4',
       title: 'Buy a milk',
       amount: 40,
@@ -33,13 +33,13 @@ class TransactionState extends ChangeNotifier {
     ),
   ];
 
-  List<Transaction> get userTransaction => _userTransactions;
+  List<M.Transaction> get userTransaction => _userTransactions;
 
-  void set userTransaction(List<Transaction> userTransaction) {
+  void set userTransaction(List<M.Transaction> userTransaction) {
     _userTransactions = userTransaction;
   }
 
-  List<Transaction> get recentTransactions {
+  List<M.Transaction> get recentTransactions {
     return _userTransactions.where((tx) {
       return tx.date.isAfter(
         DateTime.now().subtract(
@@ -49,8 +49,12 @@ class TransactionState extends ChangeNotifier {
     }).toList();
   }
 
+  M.Transaction findTransaction(String id) {
+    return userTransaction.firstWhere((u) => u.id == id);
+  }
+
   void addNewTransaction(String txTitle, double txAmount, DateTime chosenDate) {
-    final newTx = Transaction(
+    final newTx = M.Transaction(
       title: txTitle,
       amount: txAmount,
       date: chosenDate,
@@ -58,6 +62,17 @@ class TransactionState extends ChangeNotifier {
     );
 
     _userTransactions.add(newTx);
+    notifyListeners();
+  }
+
+  void updateTransaction(
+      String txTitle, double txAmount, DateTime chosenDate, String id) {
+    M.Transaction existingTransaction =
+        userTransaction.firstWhere((u) => u.id == id);
+
+    existingTransaction.title = txTitle;
+    existingTransaction.amount = txAmount;
+    existingTransaction.date = chosenDate;
     notifyListeners();
   }
 

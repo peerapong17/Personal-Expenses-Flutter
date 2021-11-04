@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/services/transaction_service.dart';
 import 'package:flutter_complete_guide/states/transaction_state.dart';
+import 'package:flutter_complete_guide/utils/present_transaction_form.dart';
 import 'package:flutter_complete_guide/widgets/transaction_list.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +22,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);
     final isLandscape = mediaQuery.orientation == Orientation.landscape;
-    final PreferredSizeWidget appBar = Platform.isIOS
+    final dynamic appBar = Platform.isIOS
         ? CupertinoNavigationBar(
             middle: Text(
               'Personal Expenses',
@@ -87,9 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         appBar.preferredSize.height -
                         mediaQuery.padding.top) *
                     0.3,
-                child: Chart(
-                    Provider.of<TransactionState>(context, listen: false)
-                        .recentTransactions),
+                child: Chart(Provider.of<Transaction>(context, listen: false)
+                    .recentTransactions),
               ),
             if (!isLandscape) txListWidget,
             if (isLandscape)
@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               mediaQuery.padding.top) *
                           0.7,
                       child: Chart(
-                          Provider.of<TransactionState>(context, listen: false)
+                          Provider.of<Transaction>(context, listen: false)
                               .recentTransactions),
                     )
                   : txListWidget
@@ -122,8 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ? Container()
                 : FloatingActionButton(
                     child: Icon(Icons.add),
-                    onPressed: () =>
-                        TransactionService.startAddNewTransaction(context),
+                    onPressed: () => presentTransactionForm(context),
                   ),
           );
   }
