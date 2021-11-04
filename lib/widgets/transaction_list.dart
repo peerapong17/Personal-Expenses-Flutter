@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/services/transaction_service.dart';
 import 'package:flutter_complete_guide/states/transaction_state.dart';
 import 'package:flutter_complete_guide/utils/present_dialog.dart';
+import 'package:flutter_complete_guide/utils/present_snack_bar.dart';
 import 'package:flutter_complete_guide/utils/present_transaction_form.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +10,10 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Transaction transactionSt = Provider.of<Transaction>(context);
+    _restoreTransaction() {
+      Provider.of<Transaction>(context, listen: false).restoreTransaction();
+    }
+
     return transactionSt.userTransaction.isEmpty
         ? LayoutBuilder(
             builder: (ctx, constraints) {
@@ -81,6 +85,11 @@ class TransactionList extends StatelessWidget {
                               if (value == "true") {
                                 transactionSt
                                     .deleteTransaction(userTransaction.id);
+
+                                presentSnackBar(
+                                  context,
+                                  _restoreTransaction,
+                                );
                               }
                             },
                           )
@@ -94,6 +103,11 @@ class TransactionList extends StatelessWidget {
                               if (value == "true") {
                                 transactionSt
                                     .deleteTransaction(userTransaction.id);
+
+                                presentSnackBar(
+                                  context,
+                                  _restoreTransaction,
+                                );
                               }
                             },
                           ),

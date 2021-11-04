@@ -33,10 +33,18 @@ class Transaction extends ChangeNotifier {
     ),
   ];
 
+  M.Transaction? _deletedTransaction;
+
   List<M.Transaction> get userTransaction => _userTransactions;
+
+  M.Transaction get deletedTransaction => _deletedTransaction!;
 
   void set userTransaction(List<M.Transaction> userTransaction) {
     _userTransactions = userTransaction;
+  }
+
+  void set deletedTransaction(M.Transaction deletedTransaction) {
+    _deletedTransaction = deletedTransaction;
   }
 
   List<M.Transaction> get recentTransactions {
@@ -50,7 +58,7 @@ class Transaction extends ChangeNotifier {
   }
 
   M.Transaction findTransaction(String id) {
-    return userTransaction.firstWhere((u) => u.id == id);
+    return _userTransactions.firstWhere((u) => u.id == id);
   }
 
   void addNewTransaction(String txTitle, double txAmount, DateTime chosenDate) {
@@ -68,7 +76,7 @@ class Transaction extends ChangeNotifier {
   void updateTransaction(
       String txTitle, double txAmount, DateTime chosenDate, String id) {
     M.Transaction existingTransaction =
-        userTransaction.firstWhere((u) => u.id == id);
+        _userTransactions.firstWhere((u) => u.id == id);
 
     existingTransaction.title = txTitle;
     existingTransaction.amount = txAmount;
@@ -77,7 +85,19 @@ class Transaction extends ChangeNotifier {
   }
 
   void deleteTransaction(String id) {
-    _userTransactions.removeWhere((tx) => tx.id == id);
+    M.Transaction existingTransaction =
+        _userTransactions.firstWhere((u) => u.id == id);
+    _deletedTransaction = existingTransaction;
+    _userTransactions.remove(existingTransaction);
+
+    // _userTransactions.removeWhere((tx) => tx.id == id);
+    notifyListeners();
+  }
+
+  void restoreTransaction() {
+    if (_deletedTransaction != null) {
+      _userTransactions.add(_deletedTransaction!);
+    }
     notifyListeners();
   }
 }
